@@ -1,0 +1,60 @@
+# Local development stack.
+# Run the NestJS API on your machine with `npm run start:dev`;
+# this file runs the services it needs: PostgreSQL, Redis and n8n.
+
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: tasksync
+      POSTGRES_PASSWORD: tasksync_dev_password
+      POSTGRES_DB: tasksync
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tasksync"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+
+  n8n:
+    # Pin an exact version before going to production, e.g. docker.n8n.io/n8nio/n8n:<version>
+    image: docker.n8n.io/n8nio/n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: n8n
+      DB_POSTGRESDB_USER: tasksync
+      DB_POSTGRESDB_PASSWORD: tasksync_dev_password
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-change-me-to-a-long-random-string}
+      GENERIC_TIMEZONE: Asia/Kolkata
+      TZ: Asia/Kolkata
+      # For Trello/Slack to reach n8n from the internet during development,
+      # set this to your ngrok URL, e.g. https://abcd-1234.ngrok-free.app/
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
+    volumes:
+      - n8ndata:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  n8ndata:

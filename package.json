@@ -1,0 +1,40 @@
+{
+  "name": "task-sync-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Task Sync Automation backend (NestJS) - keeps Trello, Google Sheets and Slack in step",
+  "scripts": {
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "start:dev": "nest start --watch",
+    "start:worker": "node dist/worker.js",
+    "start:worker:dev": "nest start --watch --entryFile worker",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.2.8",
+    "@nestjs/config": "4.0.4",
+    "@nestjs/core": "11.2.8",
+    "@nestjs/platform-express": "^12.3.3",
+    "@prisma/client": "6.19.3",
+    "ioredis": "5.4.2",
+    "joi": "^18.3.2",
+    "prisma": "^7.10.1",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.24",
+    "@nestjs/schematics": "11.1.0",
+    "@types/express": "5.0.3",
+    "@types/node": "22.15.30",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
