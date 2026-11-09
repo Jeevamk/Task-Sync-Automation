@@ -8,7 +8,6 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, { rawBody: true });
   app.enableShutdownHooks();
 
-  // Vercel runs this same bootstrap and sets PORT itself.
   const port = Number(process.env.PORT) || app.get(ConfigService).get<number>('PORT', 3000);
   await app.listen(port);
   Logger.log(`Task Sync API running on port ${port}  (health: /health)`, 'Bootstrap');
