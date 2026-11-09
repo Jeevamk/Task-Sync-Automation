@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DIRECT_URL")
 }
 
 enum Role {
@@ -36,6 +36,7 @@ enum TaskEventType {
   QA_PASSED
   QA_FAILED
   DUE_CHANGED
+  TITLE_CHANGED
   ARCHIVED
 }
 

@@ -20,15 +20,15 @@ services:
       interval: 5s
       retries: 10
 
-  redis:
-    image: redis:7
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      retries: 10
+  # redis:
+  #   image: redis:7
+  #   restart: unless-stopped
+  #   ports:
+  #     - "6379:6379"
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 5s
+  #     retries: 10
 
   n8n:
     # Pin an exact version before going to production, e.g. docker.n8n.io/n8nio/n8n:<version>
@@ -37,6 +37,8 @@ services:
     ports:
       - "5678:5678"
     environment:
+      NODE_FUNCTION_ALLOW_BUILTIN: crypto
+      N8N_RUNNERS_ENABLED: "true"
       DB_TYPE: postgresdb
       DB_POSTGRESDB_HOST: postgres
       DB_POSTGRESDB_PORT: 5432
@@ -49,6 +51,9 @@ services:
       # For Trello/Slack to reach n8n from the internet during development,
       # set this to your ngrok URL, e.g. https://abcd-1234.ngrok-free.app/
       WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678/}
+
+    extra_hosts: 
+      - "host.docker.internal:host-gateway"   
     volumes:
       - n8ndata:/home/node/.n8n
     depends_on:

@@ -10,8 +10,7 @@ export const envValidationSchema = Joi.object({
   PORT: Joi.number().port().default(3000),
   PUBLIC_BASE_URL: Joi.string().uri().default('http://localhost:3000'),
 
-  DATABASE_URL: Joi.string().uri({ scheme: ['postgresql', 'postgres'] }).required(),
-  REDIS_URL: Joi.string().uri({ scheme: ['redis', 'rediss'] }).required(),
+  DIRECT_URL: Joi.string().uri({ scheme: ['postgresql', 'postgres'] }).required(),
 
   N8N_BASE_URL: Joi.string().uri().required(),
   N8N_EVENT_WEBHOOK_URL: Joi.string().uri().allow('').optional(),
