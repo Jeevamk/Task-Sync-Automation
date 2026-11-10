@@ -26,6 +26,7 @@ export interface TrelloWebhookBody {
       card?: {
         id: string;
         name?: string;
+        desc?: string;
         idShort?: number;
         shortLink?: string;
         idList?: string;
@@ -104,6 +105,7 @@ export class TrelloWebhookService {
       const c = await this.trello.getCard(cardId);
       card = {
         name: c.name,
+        description: c.desc,
         idList: c.idList,
         idShort: c.idShort,
         url: c.shortUrl,
@@ -156,6 +158,7 @@ export class TrelloWebhookService {
         if ("name" in old && d.card?.name)
           return { kind: "renamed", title: d.card.name };
         if ("due" in old) return { kind: "due", due: d.card?.due ?? null };
+        if ("desc" in old) return { kind: "description", text: d.card?.desc ?? "" };
         return null;
       }
 

@@ -19,6 +19,7 @@ type TaskWithAssignee = Task & { assignee: TeamMember | null };
 /** Card details, used when the task does not exist yet. */
 export interface CardSnapshot {
   name: string;
+  description?: string;
   idList: string;
   idShort: number;
   url: string;
@@ -33,6 +34,7 @@ export type TaskChange =
   | { kind: "assigned"; memberTrelloId: string; memberName?: string }
   | { kind: "unassigned"; memberTrelloId: string }
   | { kind: "renamed"; title: string }
+  | { kind: "description"; text: string }
   | { kind: "due"; due: string | null }
   | { kind: "archived" }
   | { kind: "comment"; text: string };
@@ -264,6 +266,19 @@ export class TasksService {
         break;
       }
 
+      case "description": {
+        const text = input.change.text.trim();
+        if (text === (task.description ?? ""))
+          return { outcome: "no-change", taskId: task.id };
+        data.description = text || null;
+        eventType = "DESCRIPTION_CHANGED";
+        outboxType = "task.updated";
+        field = "description";
+        oldValue = task.description;
+        newValue = text || null;
+        break;
+      }
+
       case "due": {
         const due = input.change.due ? new Date(input.change.due) : null;
         data.dueDate = due;
@@ -369,6 +384,7 @@ export class TasksService {
         taskKey: `TASK-${card.idShort}`,
         trelloCardId: input.trelloCardId,
         title: card.name,
+        description: card.description?.trim() || null,
         status,
         assigneeId,
         dueDate: card.due ? new Date(card.due) : null,
@@ -442,6 +458,7 @@ export class TasksService {
         id: task.id,
         key: task.taskKey,
         title: task.title,
+        description: task.description,
         status: task.status,
         statusLabel: STATUS_LABEL[task.status],
         assignee: task.assignee

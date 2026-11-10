@@ -37,6 +37,7 @@ enum TaskEventType {
   QA_FAILED
   DUE_CHANGED
   TITLE_CHANGED
+  DESCRIPTION_CHANGED
   ARCHIVED
 }
 
@@ -98,7 +99,8 @@ model Task {
   taskKey            String     @map("task_key")
   trelloCardId       String     @unique @map("trello_card_id")
   title              String
-  status             TaskStatus @default(TODO)
+  description        String?
+  status            TaskStatus @default(TODO)
   assigneeId         String?    @map("assignee_id") @db.Uuid
   progressNotes      String?    @map("progress_notes")
   blocker            String?

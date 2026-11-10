@@ -34,6 +34,7 @@ export class InternalController {
         occurredAt: new Date(),
         card: {
           name: c.name,
+          description: c.desc,
           idList: c.idList,
           idShort: c.idShort,
           url: c.shortUrl,

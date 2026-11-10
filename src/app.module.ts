@@ -8,6 +8,7 @@ import { TrelloModule } from "./modules/trello/trello.module";
 import { TasksModule } from "./modules/tasks/tasks.module";
 import { WebhooksModule } from "./modules/webhooks/webhooks.module";
 import { InternalModule } from "./modules/internal/internal.module";
+import { SheetsModule } from "./modules/sheets/sheets.module";
 
 @Module({
   imports: [
@@ -24,8 +25,7 @@ import { InternalModule } from "./modules/internal/internal.module";
     HealthModule,
     WebhooksModule,
     InternalModule,
-    // Added in later steps: TasksModule, WebhooksModule, TrelloModule, SlackModule,
-    // OutboxModule, ProjectsModule, TeamModule, InternalModule, AuthModule ...
+    SheetsModule
   ],
 })
 export class AppModule {}
