@@ -4,3 +4,4 @@ dist/
 *.log
 coverage/
 config/project.json
+n8n/

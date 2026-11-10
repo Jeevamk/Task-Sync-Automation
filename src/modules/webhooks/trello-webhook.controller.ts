@@ -3,6 +3,7 @@ import {
   Head,
   Headers,
   HttpCode,
+  Get,
   Post,
   RawBodyRequest,
   Req,
@@ -35,5 +36,12 @@ export class TrelloWebhookController {
     }
     const result = await this.service.handle(req.body as TrelloWebhookBody);
     return { ok: true, outcome: result.outcome };
+  }
+
+  /** Some Trello checks use GET instead of HEAD; answer 200 to both. */
+  @Get()
+  @HttpCode(200)
+  check(): { ok: true } {
+    return { ok: true };
   }
 }
